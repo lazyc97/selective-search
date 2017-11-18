@@ -48,8 +48,12 @@ def demo(image_name,color_space_list=None,ks=None,sim_feats_list=None,net='vgg16
 					segment_mask = felzenszwalb(_img,scale=ks[j],sigma=0.8,min_size=ks[j])
 					_temp_dict = dict()
 					_temp_dict['blobIndIm'] = segment_mask + 1
-					os.makedirs(os.path.dirname(_file))
+					try:
+						os.makedirs(os.path.dirname(_file))
+					except OSError:
+						pass
 					scipy.io.savemat(_file,_temp_dict)
+
 				_blob_array = ssearch._ssearch(_img,ssearch.load_segment_mask(_file),sim_feats = sim_feats_list[k])
 				blob_array.append(_blob_array)
 				priority.append( np.arange(len(_blob_array),0,-1).clip(0,(len(_blob_array)+1)/2))
