@@ -38,7 +38,6 @@ def demo(image_name,color_space_list=None,ks=None,sim_feats_list=None,net='vgg16
 	if sim_feats_list is None: sim_feats_list = [[ sf.color_hist_sim(), sf.texture_hist_sim(), sf.size_sim(img.shape), sf.fill_sim(img.shape) ],[ sf.texture_hist_sim(), sf.size_sim(img.shape), sf.fill_sim(img.shape) ]]
 
 	cc = convert_colorspace(img,color_space_list)
-	seg_filename = [seg_dir + 'HSV/50/' + image_name +'.mat',seg_dir + 'HSV/100/' + image_name +'.mat', seg_dir + 'LAB/50/' + image_name +'.mat',seg_dir + 'LAB/100/' + image_name +'.mat']
 
 	for i in range(len(color_space_list)):
 		for j in range(len(ks)):
@@ -49,6 +48,7 @@ def demo(image_name,color_space_list=None,ks=None,sim_feats_list=None,net='vgg16
 					segment_mask = felzenszwalb(_img,scale=ks[j],sigma=0.8,min_size=ks[j])
 					_temp_dict = dict()
 					_temp_dict['blobIndIm'] = segment_mask + 1
+					os.makedirs(os.path.dirname(_file))
 					scipy.io.savemat(_file,_temp_dict)
 				_blob_array = ssearch._ssearch(_img,ssearch.load_segment_mask(_file),sim_feats = sim_feats_list[k])
 				blob_array.append(_blob_array)
@@ -60,6 +60,3 @@ def demo(image_name,color_space_list=None,ks=None,sim_feats_list=None,net='vgg16
 	print('\nComputed %d proposals'%(len(bboxes)))
 	scipy.io.savemat('Data/Boxes/' + image_name + '.mat',bbox_dict)
 	rcnn.rcnn_demo(image_name,net=net, cpu_mode=cpu_mode)
-	
-	
-	
