@@ -15,7 +15,7 @@ from color_utils import convert_colorspace
 from skimage.segmentation import felzenszwalb
 
 
-def demo(image_name,color_space_list=None,ks=None,sim_feats_list=None,net='vgg16', cpu_mode=True):
+def demo(image_name,color_space_list=None,ks=None,sim_feats_list=None,net='vgg16', cpu_mode=True, classes=None):
 	''' Object Recognition Demo : Selective Search + RCNN
 	parameters
 	----------
@@ -63,4 +63,4 @@ def demo(image_name,color_space_list=None,ks=None,sim_feats_list=None,net='vgg16
 	bbox_dict['boxes'] = np.vstack([np.asarray(bboxes)[:,2],np.asarray(bboxes)[:,1],np.asarray(bboxes)[:,4],np.asarray(bboxes)[:,3]]).T
 	print('\nComputed %d proposals'%(len(bboxes)))
 	scipy.io.savemat('Data/Boxes/' + image_name + '.mat',bbox_dict)
-	rcnn.rcnn_demo(image_name,net=net, cpu_mode=cpu_mode)
+	rcnn.rcnn_demo(image_name,net=net, cpu_mode=cpu_mode, classes=classes)

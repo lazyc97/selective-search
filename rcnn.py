@@ -41,14 +41,13 @@ NETS = {'vgg16': ('VGG16',
                      'caffenet_fast_rcnn_iter_40000.caffemodel')}
 
 
-def vis_detections(im, class_name, dets, thresh=0.5):
+def vis_detections(fig, ax, im, class_name, dets, thresh=0.5):
     """Draw detected bounding boxes."""
     inds = np.where(dets[:, -1] >= thresh)[0]
     if len(inds) == 0:
         return
 
     im = im[:, :, (2, 1, 0)]
-    fig, ax = plt.subplots(figsize=(12, 12))
     ax.imshow(im, aspect='equal')
     for i in inds:
         bbox = dets[i, :4]
@@ -95,6 +94,7 @@ def demo(net, image_name, classes):
     # Visualize detections for each class
     CONF_THRESH = 0.8
     NMS_THRESH = 0.3
+    fig, ax = plt.subplots(figsize=(12, 12))
     for cls in classes:
         cls_ind = CLASSES.index(cls)
         cls_boxes = boxes[:, 4*cls_ind:4*(cls_ind + 1)]
@@ -108,7 +108,7 @@ def demo(net, image_name, classes):
         dets = dets[keep, :]
         print 'All {} detections with p({} | box) >= {:.1f}'.format(cls, cls,
                                                                     CONF_THRESH)
-        vis_detections(im, cls, dets, thresh=CONF_THRESH)
+        vis_detections(fig, ax, im, cls, dets, thresh=CONF_THRESH)
 
 def parse_args():
     """Parse input arguments."""
